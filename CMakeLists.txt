@@ -12,10 +12,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/${TARGET_PLATFORM})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/${TARGET_PLATFORM})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/${TARGET_PLATFORM})
 
-add_subdirectory(${CMAKE_BINARY_DIR}/build/vendor/SDL EXCLUDE_FROM_ALL)
+add_subdirectory(${CMAKE_BINARY_DIR}/build/vendors/SDL EXCLUDE_FROM_ALL)
 add_executable(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src/main.c)
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/build/vendored/SDL/include
+    ${CMAKE_SOURCE_DIR}/build/vendors/SDL/include
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
 
