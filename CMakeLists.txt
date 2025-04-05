@@ -1,23 +1,26 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10)
 
-project(sdl3_template
-    VERSION 0.0.0
-    DESCRIPTION "SDL3 template project targetting Windows and Linux"
-    LANGUAGES C CXX
+project(sdl3_template)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(TARGET_PLATFORM "windows")
+else()
+    set(TARGET_PLATFORM "linux")
+endif()
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/${TARGET_PLATFORM})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/${TARGET_PLATFORM})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/${TARGET_PLATFORM})
+
+add_subdirectory(${CMAKE_BINARY_DIR}/build/vendor/SDL EXCLUDE_FROM_ALL)
+add_executable(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src/main.c)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/build/vendored/SDL/include
 )
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
 
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Set up SDL
-add_subdirectory(build/vendored/SDL EXCLUDE_FROM_ALL)
-set(SDL3_LIBRARY SDL3)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/bin")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/lib")
-
-add_executable(${PROJECT_NAME} src/main.c)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL3_LIBRARY})
+if(TARGET_PLATFORM STREQUAL "windows")
+    set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".exe")
+else()
+    set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".out")
+endif()
